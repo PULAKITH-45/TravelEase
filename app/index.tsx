@@ -1,15 +1,29 @@
-import { Text, View } from "react-native";
+import { useRouter } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../context/AuthContext';
 
 export default function Index() {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
-  );
+  const router = useRouter();
+  const { user, loading } = useAuth();
+  const [checked, setChecked] = useState(false);
+
+  useEffect(() => {
+    if (loading || checked) return;
+
+    setChecked(true);
+
+    if (user) {
+      router.replace({
+        pathname: '/SplashScreen',
+        params: { redirect: 'HomeScreen' },
+      } as any);
+    } else {
+      router.replace({
+        pathname: '/SplashScreen',
+        params: { redirect: 'LoginScreen' },
+      } as any);
+    }
+  }, [user, loading]);
+
+  return null;
 }
